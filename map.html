@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBLzSSZR2DJrMxaIKURp44W1n1B3g7k_Yw&sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        geocoder = new google.maps.Geocoder();
+        var latlng = new google.maps.LatLng(-34.397, 150.644);
+        var myOptions = {
+          zoom: 8,
+          center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+      }
+      function codeAddress() {
+        var address = 
+                  document.getElementById("country").value + " " +
+                  document.getElementById("city").value + " " +
+                  document.getElementById("zip").value + " " + 
+                  document.getElementById("street").value + " " + 
+                  document.getElementById("number").value 
+                  ;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+          
+            //COORDONNES TO RECORD IN DATABASE
+            alert("coordonnées : " + results[0].geometry.location);  
+
+            map.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location
+            });
+          } else {
+            alert("Geocode was not successful for the following reason: " + status);
+          }
+        });
+      }
+
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="map_canvas" style="float:left;width:400px; height:400px;"></div>
+    <form class="form-horizontal" style="float:left;">
+        <fieldset>
+          <legend>Saisir une adresse</legend>
+          <div class="control-group">
+            <label for="country">Country</label>
+            <div class="controls">
+              <input type="text" id="country">
+            </div>
+          </div>
+          <div class="control-group">
+            <label for="city">City</label>
+            <div class="controls">
+              <input type="text" id="city">
+            </div>
+          </div>
+          <div class="control-group">
+            <label for="zip">ZIP</label>
+            <div class="controls">
+              <input type="text" id="zip">
+            </div>
+          </div>
+           <div class="control-group">
+            <label for="street">Street</label>
+            <div class="controls">
+              <input type="text" id="street">
+            </div>
+          </div>
+          <div class="control-group">
+            <label for="number">Number</label>
+            <div class="controls">
+              <input type="text" id="number">
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <input type="button" value="Valider" class="btn btn-info" onclick="codeAddress()">
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      
+  </body>
+</html>
